@@ -32,12 +32,14 @@ class Edge(object):
     self.startVertex = startVertex
     self.targetVertex = targetVertex
 
+  # нужно для корректной работы heap, чтобы он по весу определял min
   def __cmp__(self, other): # перегрузка сравнения объектов по weight
     return self.cmp(self.weight, other.weight)
 
+  # нужно для корректной работы heap, чтобы он по весу определял min
   def __lt__(self, other): # less then / перегрузка знака < по weight
     selfPriority = self.weight
-    otherPriority = self.weight
+    otherPriority = other.weight
 
     return selfPriority < otherPriority
 
@@ -72,4 +74,32 @@ class PrimsJarnik(object):
   def getSpanningTree(self):
     return self.spanningTree
 
+# TESTING full connected graph with undirected edges
+node1 = Vertex('A')
+node2 = Vertex('B')
+node3 = Vertex('C')
 
+# A <-> B
+edge1 = Edge(100, node1, node2)
+edge2 = Edge(100, node2, node1)
+# A <-> C
+edge3 = Edge(1000, node1, node3)
+edge4 = Edge(1000, node3, node1)
+# B <-> C
+edge5 = Edge(0.01, node3, node2)
+edge6 = Edge(0.01, node2, node3)
+
+node1.adjacenciesList.append(edge1)
+node1.adjacenciesList.append(edge3)
+node2.adjacenciesList.append(edge2)
+node2.adjacenciesList.append(edge6)
+node3.adjacenciesList.append(edge4)
+node3.adjacenciesList.append(edge5)
+
+unvisitedList = []
+unvisitedList.append(node1)
+unvisitedList.append(node2)
+unvisitedList.append(node3)
+
+algorithm = PrimsJarnik(unvisitedList)
+algorithm.calculateSpanningTree(node1) # start searchin from node1 'A'
